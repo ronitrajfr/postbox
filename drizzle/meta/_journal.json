@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1728103609552,
+      "tag": "0000_workable_korath",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1728806027180,
+      "tag": "0001_kind_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728806807674,
+      "tag": "0002_hot_johnny_storm",
+      "breakpoints": true
+    }
+  ]
+}

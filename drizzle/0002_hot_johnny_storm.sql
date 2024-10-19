@@ -1,0 +1,1 @@
+ALTER TABLE "resume_quizzes" ADD COLUMN "questions" jsonb NOT NULL;
