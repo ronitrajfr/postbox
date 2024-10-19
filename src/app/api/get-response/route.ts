@@ -59,26 +59,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     let resp;
     const startTime = Date.now();
 
-    if (method === "GET" || method === "HEAD") {
-      resp = await fetch(url, {
-        method,
-        headers: {
-          ...requestHeaders,
-          "Content-Type": content?.type || "application/json",
-          Authorization: auth ?? "",
-        },
-      });
-    } else {
-      resp = await fetch(url, {
-        method,
-        headers: {
-          ...requestHeaders,
-          "Content-Type": content?.type || "application/json",
-          Authorization: auth ?? "",
-        },
-        body: content?.content || null,
-      });
-    }
+    const fetchOptions = {
+      method,
+      headers: {
+        ...requestHeaders,
+        "Content-Type": content?.type ?? "application/json", // Use nullish coalescing
+        Authorization: auth ?? null, // Keeping it as null
+      },
+      ...(method !== "GET" &&
+        method !== "HEAD" && { body: content?.content ?? null }),
+    };
+
+    resp = await fetch(url, fetchOptions);
 
     const timeTaken = Date.now() - startTime;
     const responseData = await resp.text();
