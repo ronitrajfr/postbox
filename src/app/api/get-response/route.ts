@@ -1,30 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import { z, ZodError } from "zod";
-
-const requestSchema = z.object({
-  auth: z
-    .object({
-      selected: z.enum(["bearer", "basic", "custom"]),
-      bearer: z.string().optional(),
-      basic: z
-        .object({
-          username: z.string().optional(),
-          password: z.string().optional(),
-        })
-        .optional(),
-      custom: z.string().optional(),
-    })
-    .optional(),
-  headers: z.string(),
-  method: z.enum(["GET", "HEAD", "POST", "PUT", "DELETE"]),
-  url: z.string().url(),
-  content: z
-    .object({
-      type: z.string(),
-      content: z.string().optional(),
-    })
-    .optional(),
-});
+import { ZodError } from "zod";
+import { requestSchema } from "~/types/requestSchema";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -63,8 +39,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       method,
       headers: {
         ...requestHeaders,
-        "Content-Type": content?.type ?? "application/json", // Use nullish coalescing
-        Authorization: auth ?? null, // Keeping it as null
+        "Content-Type": content?.type ?? "application/json",
+        Authorization: auth ?? null,
       },
       ...(method !== "GET" &&
         method !== "HEAD" && { body: content?.content ?? null }),
@@ -80,7 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       headers: Object.fromEntries(resp.headers),
       content: responseData,
       time_taken: timeTaken,
-      size: (Buffer.from(responseData).length / 1024).toFixed(2), // Size in KB
+      size: (Buffer.from(responseData).length / 1024).toFixed(2),
     });
   } catch (error) {
     if (error instanceof ZodError) {
