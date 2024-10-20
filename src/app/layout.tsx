@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import Providers from "~/components/Provider";
 import { Toaster } from "~/components/ui/toaster";
+import { ThemeProvider } from "~/components/theme-provider";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -18,7 +19,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <Providers>
-        <body>{children}</body>
+        <body>
+          {" "}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
         <Toaster />
       </Providers>
     </html>

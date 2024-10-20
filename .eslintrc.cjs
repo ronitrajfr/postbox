@@ -47,11 +47,12 @@ const config = {
         drizzleObjectName: ["db", "ctx.db"],
       },
     ],
-    "@typescript-eslint/no-explicit-any": "off", // Already added
-    "@typescript-eslint/no-unsafe-assignment": "off", // Disable this rule
-    "@typescript-eslint/no-unsafe-argument": "off", // Turn off this rule
-    "@typescript-eslint/no-unsafe-member-access": "off", // Turn off this rule
-    "@typescript-eslint/no-empty-object-type": "off", // Turn off this rule
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-empty-object-type": "off",
+    "prefer-const": "off", // Disable prefer-const rule
   },
 };
 
