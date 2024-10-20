@@ -5,18 +5,22 @@ import { UrlInput } from "./url-input";
 import { MethodSelect } from "./method-select";
 import { SendButton } from "./send-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { useToast } from "~/hooks/use-toast";
 import { AuthorizationTab } from "./authoriztion-tab";
 import { ContentTab } from "./content-tab";
 import { HeadersTab } from "./headers-tab";
 import { ResponseDisplay } from "./ui/response-display";
 
 export function RequestForm() {
+  const { toast } = useToast();
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState("GET");
   const [headers, setHeaders] = useState("{}");
   const [content, setContent] = useState("");
   const [authType, setAuthType] = useState("bearer");
   const [bearerToken, setBearerToken] = useState("");
+  const [basicAuth, setBasicAuth] = useState({ username: "", password: "" });
+  const [customAuth, setCustomAuth] = useState("");
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,11 +36,12 @@ export function RequestForm() {
         body: JSON.stringify({
           method,
           url,
-          headers: headers,
+          headers,
           auth: {
             selected: authType,
             bearer: authType === "bearer" ? bearerToken : undefined,
-            // Add other auth types as needed
+            basic: authType === "basic" ? basicAuth : undefined,
+            custom: authType === "custom" ? customAuth : undefined,
           },
           content: {
             type: "application/json", // You might want to make this configurable
@@ -48,7 +53,10 @@ export function RequestForm() {
       setResponse(data);
     } catch (error) {
       console.error("Error:", error);
-      // Handle error (e.g., show an error message to the user)
+      toast({
+        variant: "destructive",
+        title: "Error occured",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -74,6 +82,10 @@ export function RequestForm() {
               setAuthType={setAuthType}
               bearerToken={bearerToken}
               setBearerToken={setBearerToken}
+              basicAuth={basicAuth}
+              setBasicAuth={setBasicAuth}
+              customAuth={customAuth}
+              setCustomAuth={setCustomAuth}
             />
           </TabsContent>
           <TabsContent value="content">
