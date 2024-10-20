@@ -7,9 +7,9 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Clave",
+  title: "Postbox",
   description:
-    "A coding quiz app to challenge and test your programming knowledge. Compete with friends and learn together! :D ",
+    "An open-source tool designed specifically for testing APIs effectively and efficiently! :D ",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
