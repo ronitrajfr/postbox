@@ -5,14 +5,13 @@ import { UrlInput } from "./url-input";
 import { MethodSelect } from "./method-select";
 import { SendButton } from "./send-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { useToast } from "~/hooks/use-toast";
 import { AuthorizationTab } from "./authoriztion-tab";
 import { ContentTab } from "./content-tab";
 import { HeadersTab } from "./headers-tab";
 import { ResponseDisplay } from "./ui/response-display";
+import { ErrorMessage } from "./error-message";
 
 export function RequestForm() {
-  const { toast } = useToast();
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState("GET");
   const [headers, setHeaders] = useState("{}");
@@ -23,12 +22,27 @@ export function RequestForm() {
   const [customAuth, setCustomAuth] = useState("");
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
+    setResponse(null);
+
     try {
-      const res = await fetch("/api/get-response", {
+      if (!url) {
+        throw new Error("URL is required");
+      }
+
+      let parsedHeaders;
+      try {
+        parsedHeaders = JSON.parse(headers);
+      } catch (e) {
+        throw new Error("Invalid JSON in headers");
+      }
+
+      const res = await fetch("/api/generate-response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,27 +50,35 @@ export function RequestForm() {
         body: JSON.stringify({
           method,
           url,
-          headers,
+          headers: parsedHeaders,
           auth: {
             selected: authType,
-            bearer: authType === "bearer" ? bearerToken : undefined,
+            bearer: authType === "bearer" ? `Bearer ${bearerToken}` : undefined,
             basic: authType === "basic" ? basicAuth : undefined,
             custom: authType === "custom" ? customAuth : undefined,
           },
           content: {
-            type: "application/json", // You might want to make this configurable
+            type: "application/json",
             content,
           },
         }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message ||
+            "An error occurred while processing your request",
+        );
+      }
+
       const data = await res.json();
       setResponse(data);
     } catch (error) {
       console.error("Error:", error);
-      toast({
-        variant: "destructive",
-        title: "Error occured",
-      });
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -96,6 +118,7 @@ export function RequestForm() {
           </TabsContent>
         </Tabs>
       </form>
+      {error && <ErrorMessage message={error} />}
       {response && <ResponseDisplay response={response} />}
     </div>
   );

@@ -2,6 +2,10 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 
+const formatBearerToken = (token: string) => {
+  return token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+};
+
 export function AuthorizationTab({
   authType,
   setAuthType,
@@ -45,14 +49,25 @@ export function AuthorizationTab({
       {authType === "bearer" && (
         <div>
           <Label htmlFor="bearer-token">Bearer Token</Label>
-          <Input
-            id="bearer-token"
-            type="text"
-            value={bearerToken}
-            onChange={(e) => setBearerToken(e.target.value)}
-            placeholder="Enter bearer token"
-            className="border-gray-700 bg-gray-800 text-white"
-          />
+          <div className="flex">
+            <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-700 bg-gray-800 px-3 text-sm text-gray-400">
+              Bearer
+            </span>
+            <Input
+              id="bearer-token"
+              type="text"
+              value={bearerToken}
+              onChange={(e) =>
+                setBearerToken(
+                  e.target.value.startsWith("Bearer ")
+                    ? e.target.value.slice(7)
+                    : e.target.value,
+                )
+              }
+              placeholder="Enter token"
+              className="flex-1 rounded-none rounded-r-md border-gray-700 bg-gray-800 text-white"
+            />
+          </div>
         </div>
       )}
 
