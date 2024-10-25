@@ -35,14 +35,7 @@ export function RequestForm() {
         throw new Error("URL is required");
       }
 
-      let parsedHeaders;
-      try {
-        parsedHeaders = JSON.parse(headers);
-      } catch (e) {
-        throw new Error("Invalid JSON in headers");
-      }
-
-      const res = await fetch("/api/generate-response", {
+      const res = await fetch("/api/get-response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +43,7 @@ export function RequestForm() {
         body: JSON.stringify({
           method,
           url,
-          headers: parsedHeaders,
+          headers: headers,
           auth: {
             selected: authType,
             bearer: authType === "bearer" ? `Bearer ${bearerToken}` : undefined,
