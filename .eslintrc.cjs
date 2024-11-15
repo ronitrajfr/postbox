@@ -53,7 +53,8 @@ const config = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "prefer-const": "off", // Disable prefer-const rule
+    "@typescript-eslint/no-unsafe-call": "off",
+    "prefer-const": "off",
   },
 };
 
