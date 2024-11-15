@@ -11,7 +11,7 @@ import { HeadersTab } from "./headers-tab";
 import { ResponseDisplay } from "./ui/response-display";
 import { ErrorMessage } from "./error-message";
 
-export function RequestForm() {
+export default function RequestForm() {
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState("GET");
   const [headers, setHeaders] = useState("{}");
@@ -57,15 +57,14 @@ export function RequestForm() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
         throw new Error(
-          errorData.message ||
-            "An error occurred while processing your request",
+          data.error || "An error occurred while processing your request",
         );
       }
 
-      const data = await res.json();
       setResponse(data);
     } catch (error) {
       console.error("Error:", error);

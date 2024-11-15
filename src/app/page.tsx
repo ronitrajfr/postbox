@@ -1,5 +1,5 @@
 import { Header } from "~/components/header";
-import { RequestForm } from "~/components/request-form";
+import RequestForm from "~/components/request-form";
 
 export default function Home() {
   return (
