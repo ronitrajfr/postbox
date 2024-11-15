@@ -7,7 +7,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
     //@ts-ignore
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0] ??
+      req.headers.get("x-real-ip") ??
+      req.ip ??
+      "127.0.0.1";
+
+    console.log(ip);
+
+    //const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     const limit = 5; // Limiting requests to 5 per minute per IP
     const windowMs = 60 * 1000; // 1 minute
     const parsedBody = requestSchema.parse(body);
@@ -85,6 +93,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       size: (Buffer.from(responseData).length / 1024).toFixed(2),
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
