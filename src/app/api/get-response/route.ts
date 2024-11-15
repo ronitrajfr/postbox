@@ -35,7 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (ipData.count >= limit) {
       return NextResponse.json(
-        { error: "Rate limit exceeded" },
+        { error: "Rate limit exceeded. 5 requests per minute allowed" },
         { status: 429 },
       );
     }
